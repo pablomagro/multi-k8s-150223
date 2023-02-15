@@ -59,7 +59,7 @@ jobs:
 
     - name: Deploy the Docker image to the GKE cluster
       run: |
-        kubectl cluster-info
+        kubectl cluster-info dump
         chmod 700 $DEPLOY_SCRIPT
         bash ./$DEPLOY_SCRIPT
 

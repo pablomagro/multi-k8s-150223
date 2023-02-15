@@ -26,10 +26,10 @@ echo "======================================="
 
 kubectl apply -f k8s
 
-echo "======================================="
-echo " Set K8s cluster new images!"
-echo "======================================="
+# echo "======================================="
+# echo " Set K8s cluster new images!"
+# echo "======================================="
 
-kubectl set image deployments/server-deployment server=stephengrider/multi-server-k8s-pgfix:$GITHUB_SHA
-kubectl set image deployments/client-deployment client=stephengrider/multi-client-k8s:$GITHUB_SHA
-kubectl set image deployments/worker-deployment worker=stephengrider/multi-worker-k8s:$GITHUB_SHA
+# kubectl set image deployments/server-deployment server=stephengrider/multi-server-k8s-pgfix:$GITHUB_SHA
+# kubectl set image deployments/client-deployment client=stephengrider/multi-client-k8s:$GITHUB_SHA
+# kubectl set image deployments/worker-deployment worker=stephengrider/multi-worker-k8s:$GITHUB_SHA
