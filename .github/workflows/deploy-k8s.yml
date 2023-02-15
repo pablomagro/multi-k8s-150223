@@ -11,6 +11,7 @@ env:
   GKE_CLUSTER: ${{ secrets.CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOY_SCRIPT: .github/workflows/deploy.sh
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
   setup-build-publish-deploy:
@@ -57,8 +58,8 @@ jobs:
 
     - name: Build and test Docker server image.
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/react-test -f ./client/Dockerfile.dev ./client
-        docker run -e CI=true ${{ secrets.DOCKER_USERNAME }}r/react-test npm run test-cov
+        docker build -t $DOCKER_USERNAMEreact-test -f ./client/Dockerfile.dev ./client
+        docker run -e CI=true $DOCKER_USERNAME/react-test npm run test-cov
 
     - name: Deploy the Docker image to the GKE cluster
       # kubectl cluster-info dump
