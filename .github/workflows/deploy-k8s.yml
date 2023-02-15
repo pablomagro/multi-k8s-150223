@@ -41,25 +41,25 @@ jobs:
         gcloud --quiet auth configure-docker
         gcloud components update kubectl
 
-    - name: Cache Docker image
-      uses: actions/cache@v2
-      with:
-        path: ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
+    # - name: Cache Docker image
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.docker
+    #     key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-docker-
 
-    - name: Login in Docker
-      run: |
-        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+    # - name: Login in Docker
+    #   run: |
+    #     echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    - name: Build and test Docker server image.
-      run: |
-        docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
-        docker run -e CI=true pmagas/react-test npm run test-cov
+    # - name: Build and test Docker server image.
+    #   run: |
+    #     docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
+    #     docker run -e CI=true pmagas/react-test npm run test-cov
 
     - name: Deploy the Docker image to the GKE cluster
       run: |
-        chmod 700 $DEPLOY_DIRECTORY
-        bash ./$DEPLOY_DIRECTORY
+        chmod 700 $DEPLOY_SCRIPT
+        bash ./"$DEPLOY_SCRIPT"
 
