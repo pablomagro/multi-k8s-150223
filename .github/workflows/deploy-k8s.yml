@@ -13,7 +13,7 @@ env:
   # DEPLOYMENT_NAME: gke-test # Add your deployment name here.
   # IMAGE: static-site
   DEPLOY_DIRECTORY: .github/workflows
-  DEPLOY_SCRIPT: "$DEPLOY_DIRECTORY/deploy.sh"
+  DEPLOY_SCRIPT: "$DEPLOY_DIRECTORY"/deploy.sh
 
 jobs:
   setup-build-publish-deploy:
@@ -39,7 +39,7 @@ jobs:
     # helper for authentication
     - run: |
         gcloud --quiet auth configure-docker
-        gcloud components update kubectl
+      # gcloud components update kubectl
 
     # - name: Cache Docker image
     #   uses: actions/cache@v2
