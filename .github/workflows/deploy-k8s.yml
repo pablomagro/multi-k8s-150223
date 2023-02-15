@@ -38,7 +38,7 @@ jobs:
     # helper for authentication
     - run: |
         gcloud --quiet auth configure-docker
-      gcloud components update kubectl
+        gcloud components update kubectl
 
     - name: Cache Docker image
       uses: actions/cache@v2
