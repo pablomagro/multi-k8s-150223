@@ -38,7 +38,7 @@ jobs:
     # helper for authentication
     - run: |
         gcloud --quiet auth configure-docker
-        gcloud components update kubectl
+      # gcloud components update kubectl
 
     - name: Cache Docker image
       uses: actions/cache@v2
@@ -54,8 +54,8 @@ jobs:
 
     # - name: Build and test Docker server image.
     #   run: |
-    #     docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
-    #     docker run -e CI=true pmagas/react-test npm run test-cov
+    #     docker build -t stephengrider/react-test -f ./client/Dockerfile.dev ./client
+    #     docker run -e CI=true stephengrider/react-test npm run test-cov
 
     - name: Deploy the Docker image to the GKE cluster
       run: |
