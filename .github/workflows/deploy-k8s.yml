@@ -56,7 +56,10 @@ jobs:
     - name: Set environment variable
       run: echo "CLOUDSDK_CORE_DISABLE=1" >> $GITHUB_ENV
     - name: Deploy the Docker image to the GKE cluster
+      env:
+        DEPLOY_DIRECTORY = .github/workflows
+        DEPLOY_SCRIPT = $DEPLOY_DIRECTORY/deploy.sh
       run: |
-        chmod 700 deploy.sh
-        ./deploy.sh
+        chmod 700 $DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT
 
