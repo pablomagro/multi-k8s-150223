@@ -10,8 +10,6 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ${{ secrets.CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  # DEPLOYMENT_NAME: gke-test # Add your deployment name here.
-  # IMAGE: static-site
   DEPLOY_SCRIPT: .github/workflows/deploy.sh
 
 jobs:
@@ -38,15 +36,22 @@ jobs:
     # helper for authentication
     - run: |
         gcloud --quiet auth configure-docker
-        gcloud components update kubectl
+      # gcloud components update kubectl
 
-    - name: Cache Docker image
-      uses: actions/cache@v2
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
       with:
-        path: ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GKE_SA_KEY }}
+
+    # - name: Cache Docker image
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.docker
+    #     key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-docker-
 
     - name: Login in Docker
       run: |
@@ -60,6 +65,10 @@ jobs:
     - name: Deploy the Docker image to the GKE cluster
       # kubectl cluster-info dump
       run: |
+        kubectl get services -o wide
+
         chmod 700 $DEPLOY_SCRIPT
         bash ./$DEPLOY_SCRIPT
+
+        kubectl get services -o wide
 
