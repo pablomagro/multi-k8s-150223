@@ -58,7 +58,7 @@ jobs:
 
     - name: Build and test Docker server image.
       run: |
-        docker build -t $DOCKER_USERNAMEreact-test -f ./client/Dockerfile.dev ./client
+        docker build -t $DOCKER_USERNAME/react-test -f ./client/Dockerfile.dev ./client
         docker run -e CI=true $DOCKER_USERNAME/react-test npm run test-cov
 
     - name: Deploy the Docker image to the GKE cluster
