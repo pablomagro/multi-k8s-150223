@@ -61,5 +61,5 @@ jobs:
     - name: Deploy the Docker image to the GKE cluster
       run: |
         chmod 700 $DEPLOY_DIRECTORY
-        ./$DEPLOY_DIRECTORY
+        bash ./$DEPLOY_DIRECTORY
 
