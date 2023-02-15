@@ -35,18 +35,18 @@ jobs:
     - run: |
         gcloud --quiet auth configure-docker
 
-      - name: Cache Docker image
-        uses: actions/cache@v2
-        with:
-          path: ~/.docker
-          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
+    - name: Cache Docker image
+      uses: actions/cache@v2
+      with:
+        path: ~/.docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
 
-      - name: Build and test Docker images
-        run: |
-          docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
-          docker run -e CI=true pmagas/react-test npm run test-cov
+    - name: Build and test Docker images
+      run: |
+        docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
+        docker run -e CI=true pmagas/react-test npm run test-cov
 
       #     docker build -t pmagas/multi-client-19-49 ./client
       #     docker build -t pmagas/multi-nginx-19-49 ./nginx
