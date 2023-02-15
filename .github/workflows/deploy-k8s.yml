@@ -1,0 +1,81 @@
+name: Deploy Frontend CI
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Cache Docker image
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile*') }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      - name: Build and test Docker images
+        run: |
+          docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
+          docker run -e CI=true pmagas/react-test npm run test-cov
+
+      #     docker build -t pmagas/multi-client-19-49 ./client
+      #     docker build -t pmagas/multi-nginx-19-49 ./nginx
+      #     docker build -t pmagas/multi-server-19-49 ./server
+      #     docker build -t pmagas/multi-worker-19-49 ./worker
+
+      # - name: Login and push Docker images
+      #   run: |
+      #     echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      #     docker push pmagas/multi-client-19-49
+      #     docker push pmagas/multi-nginx-19-49
+      #     docker push pmagas/multi-server-19-49
+      #     docker push pmagas/multi-worker-19-49
+
+      #     docker logout
+
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ vars.AWS_REGION }}
+
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v1
+      #   with:
+      #     terraform_version: 1.1.0
+
+      # - name: Terraform init and plan
+      #   run: |
+      #     terraform -chdir="./infrastructure" init
+      #     terraform -chdir="./infrastructure" plan -out=tfplan
+
+      # - name: Terraform Apply
+      #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      #   run: terraform -chdir="./infrastructure" apply -auto-approve tfplan
+
+      # - if: github.ref == 'refs/heads/master' # deploy only for the master branch
+      #   name: Generate deployment package
+      #   run: zip -r deploy.zip . -x '*.git*'
+
+      # - if: github.ref == 'refs/heads/master' # deploy only for the master branch
+      #   name: Deploy to Elastic Beanstalk
+      #   uses: einaregilsson/beanstalk-deploy@v18
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+      #     application_name: multi-docker-gh
+      #     environment_name: Multidockergh-env
+      #     existing_bucket_name: elasticbeanstalk-ap-southeast-2-605313441167
+      #     region: ap-southeast-2
+      #     version_label: v${{ github.sha }}
+      #     deployment_package: deploy.zip
+      #     use_existing_version_if_available: true
