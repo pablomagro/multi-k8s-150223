@@ -38,7 +38,7 @@ jobs:
     # helper for authentication
     - run: |
         gcloud --quiet auth configure-docker
-      # gcloud components update kubectl
+        gcloud components update kubectl
 
     - name: Cache Docker image
       uses: actions/cache@v2
@@ -59,6 +59,7 @@ jobs:
 
     - name: Deploy the Docker image to the GKE cluster
       run: |
+        kubectl cluster-info
         chmod 700 $DEPLOY_SCRIPT
         bash ./$DEPLOY_SCRIPT
 
