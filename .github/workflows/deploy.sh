@@ -6,9 +6,9 @@ docker push pmagas/multi-client-k8s:latest
 docker push pmagas/multi-server-k8s-pgfix:latest
 docker push pmagas/multi-worker-k8s:latest
 
-docker push pmagas/multi-client-k8s:$GITHUB_SHA
-docker push pmagas/multi-server-k8s-pgfix:$GITHUB_SHA
-docker push pmagas/multi-worker-k8s:$GITHUB_SHA
+# docker push pmagas/multi-client-k8s:$GITHUB_SHA
+# docker push pmagas/multi-server-k8s-pgfix:$GITHUB_SHA
+# docker push pmagas/multi-worker-k8s:$GITHUB_SHA
 
 kubectl apply -f k8s
 kubectl set image deployments/server-deployment server=pmagas/multi-server-k8s-pgfix:$GITHUB_SHA
