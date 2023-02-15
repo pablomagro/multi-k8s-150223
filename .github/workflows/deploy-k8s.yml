@@ -60,6 +60,6 @@ jobs:
 
     - name: Deploy the Docker image to the GKE cluster
       run: |
-        chmod 700 ${{ env.DEPLOY_DIRECTORY }}
-        ./${{ env.DEPLOY_DIRECTORY }}
+        chmod 700 $DEPLOY_DIRECTORY
+        ./$DEPLOY_DIRECTORY
 
