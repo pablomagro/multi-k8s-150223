@@ -30,6 +30,9 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: ${{ secrets.GKE_PROJECT }}
 
+    - name: Set environment variable
+      run: echo "CLOUDSDK_CORE_DISABLE=1" >> $GITHUB_ENV
+
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
     - run: |
@@ -53,12 +56,10 @@ jobs:
         docker build -t pmagas/react-test -f ./client/Dockerfile.dev ./client
         docker run -e CI=true pmagas/react-test npm run test-cov
 
-    - name: Set environment variable
-      run: echo "CLOUDSDK_CORE_DISABLE=1" >> $GITHUB_ENV
     - name: Deploy the Docker image to the GKE cluster
       env:
-        DEPLOY_DIRECTORY = .github/workflows
-        DEPLOY_SCRIPT = $DEPLOY_DIRECTORY/deploy.sh
+        DEPLOY_DIRECTORY: .github/workflows
+        DEPLOY_SCRIPT: $DEPLOY_DIRECTORY/deploy.sh
       run: |
         chmod 700 $DEPLOY_SCRIPT
         ./$DEPLOY_SCRIPT
