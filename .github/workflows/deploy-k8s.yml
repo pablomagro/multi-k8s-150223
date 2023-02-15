@@ -58,8 +58,8 @@ jobs:
     #     docker run -e CI=true stephengrider/react-test npm run test-cov
 
     - name: Deploy the Docker image to the GKE cluster
+      # kubectl cluster-info dump
       run: |
-        kubectl cluster-info dump
         chmod 700 $DEPLOY_SCRIPT
         bash ./$DEPLOY_SCRIPT
 
