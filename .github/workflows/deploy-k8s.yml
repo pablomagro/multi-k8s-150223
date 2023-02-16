@@ -1,10 +1,10 @@
 name: Build and Deploy to GKE - CI/CD
-
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [push, pull_request]
+# on:
+#   push:
+#     branches: [master]
+#   pull_request:
+#     branches: [master]
   # Allow you to run this workflow manually from the Actions tab
   # workflow_dispatch:
 
@@ -18,7 +18,7 @@ env:
 
 jobs:
   setup-build-test:
-    name: Setup, Build, and Test
+    name: Test in Docker
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
 
   build-push-to-Docker-Hub:
     needs: [setup-build-test]
-    name: Setup, Build and Publish to Docker Hub
+    name: Build and Publish to Docker Hub
     runs-on: ubuntu-latest
 
     steps:
@@ -60,10 +60,17 @@ jobs:
         chmod 700 $DEPLOY_DOCKER_HUB_SCRIPT
         bash ./$DEPLOY_DOCKER_HUB_SCRIPT
 
+  deploy-infrastructure:
+    name: Deploy Infraestructure
+
   deploy-to-GC-K8s-cluster:
-    needs: [build-push-to-Docker-Hub]
     name: Setup and Deploy to GC K8s Cluster
+    needs: [build-push-to-Docker-Hub]
+
+    if: github.ref == 'refs/heads/master' # Deploy only for the master branch.
+
     runs-on: ubuntu-latest
+    enviroment: production
 
     steps:
     - name: Checkout code
