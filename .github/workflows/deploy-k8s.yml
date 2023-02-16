@@ -15,7 +15,7 @@ env:
   DEPLOY_K8S_SCRIPT: .github/workflows/deploy-k8s.sh
   DEPLOY_DOCKER_HUB_SCRIPT: .github/workflows/deploy-docker-hub.sh
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DEPLOY_PROD: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+  DEPLOY_IN_PRODUCTION: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
 jobs:
   setup-build-test:
@@ -67,7 +67,7 @@ jobs:
   deploy-to-GC-K8s-cluster:
     name: Deploy to GC K8s Cluster
     needs: [build-push-to-Docker-Hub]
-    if: ${{ DEPLOY_PROD }} # Deploy only for the master branch.
+    if: ${{ env.DEPLOY_IN_PRODUCTION }} # Deploy only for the master branch.
 
     runs-on: ubuntu-latest
 
