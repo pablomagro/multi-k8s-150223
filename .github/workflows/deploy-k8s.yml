@@ -70,7 +70,7 @@ jobs:
     if: github.ref == 'refs/heads/master' # Deploy only for the master branch.
 
     runs-on: ubuntu-latest
-    enviroment: production
+    # enviroment: production
 
     steps:
     - name: Checkout code
