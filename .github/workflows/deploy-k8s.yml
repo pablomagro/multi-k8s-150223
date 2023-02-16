@@ -67,7 +67,7 @@ jobs:
   deploy-to-GC-K8s-cluster:
     name: Deploy to GC K8s Cluster
     needs: [build-push-to-Docker-Hub]
-    if: ${{ env.DEPLOY_IN_PRODUCTION }} # Deploy only for the master branch.
+    if: $DEPLOY_IN_PRODUCTION # Deploy only for the master branch.
 
     runs-on: ubuntu-latest
 
