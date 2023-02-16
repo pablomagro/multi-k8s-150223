@@ -11,4 +11,4 @@ spec:
   commonName: k8s-multi.hopto.org
   dnsNames:
     - k8s-multi.hopto.org
-    - www.k8s-multi.hopto.org
+    # - www.k8s-multi.hopto.org
