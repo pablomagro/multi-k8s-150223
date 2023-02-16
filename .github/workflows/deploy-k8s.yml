@@ -60,8 +60,8 @@ jobs:
         chmod 700 $DEPLOY_DOCKER_HUB_SCRIPT
         bash ./$DEPLOY_DOCKER_HUB_SCRIPT
 
-  deploy-infrastructure:
-    name: Deploy Infraestructure
+  # deploy-infrastructure:
+  #   name: Deploy Infraestructure
 
   deploy-to-GC-K8s-cluster:
     name: Setup and Deploy to GC K8s Cluster
