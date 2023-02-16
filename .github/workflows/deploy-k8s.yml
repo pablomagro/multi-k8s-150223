@@ -12,8 +12,8 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ${{ secrets.CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  K8S_DEPLOY_SCRIPT: .github/workflows/deploy-k8s.sh
-  DOCKER_HUB_DEPLOY_SCRIPT: .github/workflows/deploy-docker-hub.sh
+  DEPLOY_K8S_SCRIPT: .github/workflows/deploy-k8s.sh
+  DEPLOY_DOCKER_HUB_SCRIPT: .github/workflows/deploy-docker-hub.sh
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
@@ -48,8 +51,8 @@ jobs:
 
     - name: Build and push to Docker Hub
       run: |
-        chmod 744 $DOCKER_HUB_DEPLOY_SCRIPT
-        bash ./$DOCKER_HUB_DEPLOY_SCRIPT
+        chmod 700 $DEPLOY_DOCKER_HUB_SCRIPT
+        ./$DEPLOY_DOCKER_HUB_SCRIPT
 
   deploy-to-GC-K8s-cluster:
     needs: [build-push-to-Docker-Hub]
@@ -84,6 +87,6 @@ jobs:
 
     # - name: Deploy the Docker image to the GKE cluster
     #   run: |
-    #     chmod 744 $K8S_DEPLOY_SCRIPT
-    #     bash ./$K8S_DEPLOY_SCRIPT
+    #     chmod 700 $DEPLOY_K8S_SCRIPT
+    #     ./$DEPLOY_K8S_SCRIPT
 
