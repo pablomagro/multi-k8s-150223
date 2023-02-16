@@ -10,7 +10,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ${{ secrets.CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  DEPLOY_SCRIPT: .github/workflows/deploy.sh
+  DEPLOY_SCRIPT: .github/workflows/deploy-k8s.sh
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
