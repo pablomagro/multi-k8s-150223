@@ -1,5 +1,6 @@
 name: Build and Deploy to GKE - CI/CD
-on: [push, pull_request]
+# on: push
+# on: [push, pull_request]
 # on:
 #   push:
 #     branches: [master]
@@ -15,6 +16,7 @@ env:
   DEPLOY_K8S_SCRIPT: .github/workflows/deploy-k8s.sh
   DEPLOY_DOCKER_HUB_SCRIPT: .github/workflows/deploy-docker-hub.sh
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DEPLOY_PROD: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
 jobs:
   setup-build-test:
@@ -37,8 +39,8 @@ jobs:
         docker run -e CI=true $DOCKER_USERNAME/react-test npm run test-cov
 
   build-push-to-Docker-Hub:
-    needs: [setup-build-test]
     name: Build and Publish to Docker Hub
+    needs: [setup-build-test]
     runs-on: ubuntu-latest
 
     steps:
@@ -64,10 +66,9 @@ jobs:
   #   name: Deploy Infraestructure
 
   deploy-to-GC-K8s-cluster:
-    name: Setup and Deploy to GC K8s Cluster
+    name: Deploy to GC K8s Cluster
     needs: [build-push-to-Docker-Hub]
-
-    if: github.ref == 'refs/heads/master' # Deploy only for the master branch.
+    if: ${{ DEPLOY_PROD }} # Deploy only for the master branch.
 
     runs-on: ubuntu-latest
     # enviroment: production
