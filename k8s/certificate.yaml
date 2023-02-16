@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
+  name: k8s-multi-hopto-org-tls
+spec:
+  secretName: k8s-multi-hopto-org
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: k8s-multi.hopto.org
+  dnsNames:
+    - k8s-multi.hopto.org
+    - www.k8s-multi.hopto.org
