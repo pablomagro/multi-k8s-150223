@@ -1,12 +1,12 @@
 name: Build and Deploy to GKE - CI/CD
-
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  # Allow you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
+on: [push]
+# on:
+#   push:
+#     branches:
+#       - '*'
+#   pull_request:
+#     branches:
+#       - '!master'
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -18,7 +18,7 @@ env:
 
 jobs:
   setup-build-test:
-    name: Setup, Build, and Test
+    name: Test in Docker
     runs-on: ubuntu-latest
 
     steps:
@@ -37,8 +37,8 @@ jobs:
         docker run -e CI=true $DOCKER_USERNAME/react-test npm run test-cov
 
   build-push-to-Docker-Hub:
+    name: Build and Publish to Docker Hub
     needs: [setup-build-test]
-    name: Setup, Build and Publish to Docker Hub
     runs-on: ubuntu-latest
 
     steps:
@@ -60,9 +60,14 @@ jobs:
         chmod 700 $DEPLOY_DOCKER_HUB_SCRIPT
         bash ./$DEPLOY_DOCKER_HUB_SCRIPT
 
+  # deploy-infrastructure:
+  #   name: Deploy Infraestructure
+
   deploy-to-GC-K8s-cluster:
+    name: Deploy to GC K8s Cluster
     needs: [build-push-to-Docker-Hub]
-    name: Setup and Deploy to GC K8s Cluster
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' # Deploy only for the master branch.
+
     runs-on: ubuntu-latest
 
     steps:
